@@ -1,0 +1,27 @@
+{
+  "users": [
+    {
+      "id": "58a1d762-6711-449e-81a9-c8d3b616cd9d",
+      "email": "keer@gmail.com",
+      "passwordHash": "a33b2dfabdeb4b8aefa1f3ed36652149547ac304c277ecfce44921e339d2686ee130bf4c5cdc88a96b580cab9e2af04b5697765c7615894f5ed3f8498d6f8bdf",
+      "name": "keer",
+      "role": "Admin",
+      "teams": [],
+      "streak": 0,
+      "lastSubmissionDate": null,
+      "badges": [
+        "Inception"
+      ],
+      "avatar": "🦊",
+      "timezone": "UTC",
+      "notificationSettings": {
+        "emailDigest": true,
+        "slackWebhookAlerts": false,
+        "dailyReminders": true
+      }
+    }
+  ],
+  "teams": [],
+  "standups": [],
+  "insights": []
+}
