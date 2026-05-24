@@ -29,7 +29,9 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
 
 export async function configureFrontend(appInstance: express.Express) {
   if (process.env.NODE_ENV === "production") {
-    const distPath = path.join(process.cwd(), "dist");
+    const distPath = process.env.CLIENT_DIST_PATH
+      ? path.resolve(process.cwd(), process.env.CLIENT_DIST_PATH)
+      : path.join(process.cwd(), "../client/dist");
     appInstance.use(express.static(distPath));
     appInstance.get("*", (_req, res) => {
       res.sendFile(path.join(distPath, "index.html"));

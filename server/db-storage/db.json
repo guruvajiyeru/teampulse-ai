@@ -19,6 +19,26 @@
         "slackWebhookAlerts": false,
         "dailyReminders": true
       }
+    },
+    {
+      "id": "cbe2dfd6-3c9a-4b04-91a8-422f5b35bad1",
+      "email": "guruvajiyerupilli7@gmail.com",
+      "passwordHash": "82d4f9ba5311db6c9364236e6338b9b1ca1113d6408462c46b8c8551a932f37904423358810dbf4a55a4aeaddf474ef6027d137fbc97a3f0f0f009f88a995e71",
+      "name": "guru",
+      "role": "Member",
+      "teams": [],
+      "streak": 0,
+      "lastSubmissionDate": null,
+      "badges": [
+        "Inception"
+      ],
+      "avatar": "🐨",
+      "timezone": "UTC",
+      "notificationSettings": {
+        "emailDigest": true,
+        "slackWebhookAlerts": false,
+        "dailyReminders": true
+      }
     }
   ],
   "teams": [],

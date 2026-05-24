@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { getTeamTheme } from "../utils/theme";
+import { apiUrl } from "@/utils/api";
 
 export default function DashboardView() {
   const { 
@@ -86,7 +87,7 @@ export default function DashboardView() {
     }
     setIsSimulatingJira(true);
     try {
-      const res = await fetch("/api/webhooks/jira", {
+      const res = await fetch(apiUrl("/api/webhooks/jira"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

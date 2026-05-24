@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { io } from "socket.io-client";
+import { apiUrl, SOCKET_URL } from "@/utils/api";
 
 export interface UserContext {
   id: string;
@@ -91,6 +92,8 @@ export interface TeamAnalytics {
   leaderboard: { id: string; name: string; streak: number; badges: string[] }[];
   last7DaysSubmissionsCount: number;
 }
+
+const fetchApi = (path: string, init?: RequestInit) => fetch(apiUrl(path), init);
 
 interface AppContextType {
   user: UserContext | null;
@@ -233,7 +236,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // Profile loaders
   const loadProfile = async (authToken: string) => {
     try {
-      const res = await fetch("/api/auth/me", {
+      const res = await fetchApi("/api/auth/me", {
         headers: { "Authorization": `Bearer ${authToken}` }
       });
       const data = await res.json();
@@ -252,7 +255,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string): Promise<boolean> => {
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetchApi("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
@@ -280,7 +283,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const loginWithOAuth = async (provider: "google" | "microsoft", name: string, email: string, avatar: string): Promise<boolean> => {
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/oauth", {
+      const res = await fetchApi("/api/auth/oauth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ provider, name, email, avatar })
@@ -308,7 +311,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const register = async (name: string, email: string, password: string, role: string): Promise<boolean> => {
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetchApi("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, role })
@@ -337,7 +340,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const loadTeams = async () => {
     if (!token) return;
     try {
-      const res = await fetch("/api/teams", { headers: getHeaders() });
+      const res = await fetchApi("/api/teams", { headers: getHeaders() });
       const data = await res.json();
       if (data.success) {
         setMyTeams(data.data.teams);
@@ -354,21 +357,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!token || !activeTeam) return;
     try {
       // Load members
-      const membersRes = await fetch(`/api/teams/${activeTeam.id}/members`, { headers: getHeaders() });
+      const membersRes = await fetchApi(`/api/teams/${activeTeam.id}/members`, { headers: getHeaders() });
       const membersData = await membersRes.json();
       if (membersData.success) {
         setTeamMembers(membersData.data.members);
       }
 
       // Load submissions
-      const standupsRes = await fetch(`/api/standups/${activeTeam.id}`, { headers: getHeaders() });
+      const standupsRes = await fetchApi(`/api/standups/${activeTeam.id}`, { headers: getHeaders() });
       const standupsData = await standupsRes.json();
       if (standupsData.success) {
         setStandups(standupsData.data.standups);
       }
 
       // Load draft
-      const draftRes = await fetch(`/api/standups/${activeTeam.id}/draft`, { headers: getHeaders() });
+      const draftRes = await fetchApi(`/api/standups/${activeTeam.id}/draft`, { headers: getHeaders() });
       const draftData = await draftRes.json();
       if (draftData.success) {
         setActiveDraft(draftData.data.draft);
@@ -377,14 +380,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
 
       // Load analytics telemetry
-      const analyticsRes = await fetch(`/api/standups/${activeTeam.id}/analytics`, { headers: getHeaders() });
+      const analyticsRes = await fetchApi(`/api/standups/${activeTeam.id}/analytics`, { headers: getHeaders() });
       const analyticsData = await analyticsRes.json();
       if (analyticsData.success) {
         setAnalytics(analyticsData.data.analytics);
       }
 
       // Load AI reports list
-      const insightsRes = await fetch(`/api/standups/${activeTeam.id}/report`, { headers: getHeaders() });
+      const insightsRes = await fetchApi(`/api/standups/${activeTeam.id}/report`, { headers: getHeaders() });
       const insightsData = await insightsRes.json();
       if (insightsData.success) {
         setInsights(insightsData.data.insights);
@@ -404,7 +407,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const createNewTeam = async (name: string, questions: string[], standupTime: string, deadline: string): Promise<boolean> => {
     setLoading(true);
     try {
-      const res = await fetch("/api/teams", {
+      const res = await fetchApi("/api/teams", {
         method: "POST",
         headers: getHeaders(),
         body: JSON.stringify({ name, questions, standupTime, deadline })
@@ -432,7 +435,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const joinTeamByCode = async (inviteCode: string): Promise<boolean> => {
     setLoading(true);
     try {
-      const res = await fetch("/api/teams/join", {
+      const res = await fetchApi("/api/teams/join", {
         method: "POST",
         headers: getHeaders(),
         body: JSON.stringify({ inviteCode })
@@ -472,7 +475,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
     setLoading(true);
     try {
-      const res = await fetch("/api/standups", {
+      const res = await fetchApi("/api/standups", {
         method: "POST",
         headers: getHeaders(),
         body: JSON.stringify({
@@ -512,7 +515,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const toggleVacationOOO = async () => {
     if (!activeTeam) return;
     try {
-      const res = await fetch(`/api/teams/${activeTeam.id}/vacation`, {
+      const res = await fetchApi(`/api/teams/${activeTeam.id}/vacation`, {
         method: "POST",
         headers: getHeaders()
       });
@@ -544,7 +547,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!activeTeam) return false;
     setLoading(true);
     try {
-      const res = await fetch(`/api/teams/${activeTeam.id}/settings`, {
+      const res = await fetchApi(`/api/teams/${activeTeam.id}/settings`, {
         method: "PUT",
         headers: getHeaders(),
         body: JSON.stringify({ 
@@ -586,7 +589,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const deleteTeamWorkspace = async (teamId: string): Promise<boolean> => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/teams/${teamId}`, {
+      const res = await fetchApi(`/api/teams/${teamId}`, {
         method: "DELETE",
         headers: getHeaders()
       });
@@ -619,7 +622,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!activeTeam) return false;
     setLoading(true);
     try {
-      const res = await fetch(`/api/teams/${activeTeam.id}/members/${userId}/role`, {
+      const res = await fetchApi(`/api/teams/${activeTeam.id}/members/${userId}/role`, {
         method: "PUT",
         headers: getHeaders(),
         body: JSON.stringify({ role })
@@ -646,7 +649,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!activeTeam) return false;
     setLoading(true);
     try {
-      const res = await fetch(`/api/teams/${activeTeam.id}/report`, {
+      const res = await fetchApi(`/api/teams/${activeTeam.id}/report`, {
         method: "POST",
         headers: getHeaders()
       });
@@ -677,7 +680,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   ): Promise<boolean> => {
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/profile", {
+      const res = await fetchApi("/api/auth/profile", {
         method: "PUT",
         headers: getHeaders(),
         body: JSON.stringify({ name, avatar, notificationSettings, timezone })
@@ -705,7 +708,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const addComment = async (standupId: string, text: string): Promise<boolean> => {
     try {
-      const res = await fetch(`/api/standups/${standupId}/comments`, {
+      const res = await fetchApi(`/api/standups/${standupId}/comments`, {
         method: "POST",
         headers: getHeaders(),
         body: JSON.stringify({ text })
@@ -769,7 +772,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!token || !activeTeam) return;
 
-    const socket = io();
+    const socket = io(SOCKET_URL || undefined, { path: "/socket.io" });
 
     socket.on("connect", () => {
       console.log("Socket connected! Joining team room:", activeTeam.id);
@@ -799,7 +802,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const broadcastEmail = async (): Promise<any> => {
     if (!activeTeam) return { success: false, message: "Workspace active target missing" };
     try {
-      const res = await fetch(`/api/teams/${activeTeam.id}/broadcast/email`, {
+      const res = await fetchApi(`/api/teams/${activeTeam.id}/broadcast/email`, {
         method: "POST",
         headers: getHeaders()
       });
@@ -819,7 +822,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const broadcastSlack = async (): Promise<any> => {
      if (!activeTeam) return { success: false, message: "Workspace active target missing" };
      try {
-       const res = await fetch(`/api/teams/${activeTeam.id}/broadcast/slack`, {
+       const res = await fetchApi(`/api/teams/${activeTeam.id}/broadcast/slack`, {
          method: "POST",
          headers: getHeaders()
        });

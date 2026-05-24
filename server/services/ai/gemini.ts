@@ -97,7 +97,7 @@ Extract and generate:
 Provide the exact JSON object output with keys: "aiSummary" (string), "aiBlockers" (array of strings), "aiActionItems" (array of strings), "aiMoodScore" (number).`;
 
     const response = await client.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-1.5-flash",
       contents: prompt,
       config: {
         responseMimeType: "application/json",
@@ -213,7 +213,7 @@ Provide your analysis exactly in a single JSON object. Schema:
 }`;
 
     const response = await client.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-1.5-flash",
       contents: prompt,
       config: {
         responseMimeType: "application/json",
@@ -369,7 +369,7 @@ When answering:
     });
 
     const response = await client.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-1.5-flash",
       contents: contents,
       config: {
         systemInstruction: systemInstruction,

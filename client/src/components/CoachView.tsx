@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { getTeamTheme } from "../utils/theme";
 import { motion, AnimatePresence } from "motion/react";
+import { apiUrl } from "@/utils/api";
 
 interface Message {
   id: string;
@@ -188,7 +189,7 @@ export default function CoachView() {
         text: msg.text
       }));
 
-      const response = await fetch(`/api/standups/${activeTeam?.id}/coach`, {
+      const response = await fetch(apiUrl(`/api/standups/${activeTeam?.id}/coach`), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

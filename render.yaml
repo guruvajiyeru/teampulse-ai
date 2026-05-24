@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: teampulseai-backend
+    env: node
+    region: oregon
+    branch: main
+    buildCommand: cd server && npm install && npm run build
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: CLIENT_URL
+      - key: MONGO_URI
+      - key: GEMINI_API_KEY
+      - key: SMTP_HOST
+      - key: SMTP_PORT
+      - key: SMTP_USER
+      - key: SMTP_PASS
+      - key: SMTP_FROM
