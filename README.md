@@ -109,6 +109,10 @@ A full-stack TeamPulse AI web application with React/Vite frontend and Express/M
 - `VITE_API_BASE_URL`
 - `VITE_SOCKET_URL`
 
+
+
+update deploy
+
 ## Notes
 
 - The frontend now supports separate deployments via `VITE_API_BASE_URL` and `VITE_SOCKET_URL`.
