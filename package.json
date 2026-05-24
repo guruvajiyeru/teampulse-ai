@@ -11,7 +11,10 @@
     "build:server": "cd server && npm run build",
     "build:all": "npm run build && npm run build:server",
     "deploy:netlify": "npm run build && npx netlify deploy --prod --dir=client/dist",
-    "start": "cd server && node dist/server.cjs",
+    "prestart": "cd server && npm install && npm run build",
+    "prepare": "cd server && npm install && npm run build",
+    "start": "node start-server.js",
+    "postinstall": "cd server && npm install && npm run build",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
