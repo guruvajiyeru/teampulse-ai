@@ -18,6 +18,13 @@ app.get("/health", (_req, res) => {
   res.json({ status: "ok", service: "TeamPulseAI API", timestamp: new Date().toISOString() });
 });
 
+app.get("/", (_req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "TeamPulseAI Backend Running Successfully",
+  });
+});
+
 app.use((req, res) => {
   res.status(404).json({ success: false, message: `Route ${req.method} ${req.path} not found` });
 });
